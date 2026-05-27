@@ -761,9 +761,9 @@ body {
 
 
 /* ══════════════════════════════════════════════════════════════════
-   RESPONSIVE  (mobile: screen width below 768px)
+   RESPONSIVE  (mobile & large phones)
 ═══════════════════════════════════════════════════════════════════ */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 900px) {
 
   body {
     overflow-x: hidden;
@@ -836,14 +836,13 @@ body {
   }
 
   .form-textarea {
-  width: 100%;
-  min-height: 140px;
-  font-size: 0.78rem;
-}
+    width: 100%;
+    min-height: 250px; 
+    font-size: 16px;
+  }
 
-.form-input,
-.form-select {
-  font-size: 0.78rem;
-}
-
+  .form-input,
+  .form-select {
+    font-size: 16px;
+  }
 }
