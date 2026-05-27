@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard — AI Debug Assistant</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <div class="dashboard">
+
+      <!-- ══════════════ SIDEBAR ══════════════ -->
+      <aside class="sidebar">
+
+        <div class="sidebar-brand">
+          <div class="sidebar-brand-name">
+            &lt;<span class="dim">/</span>debug<span class="dim">&gt;</span>
+          </div>
+          <div class="sidebar-brand-sub">AI Debug Assistant · v1.0.0</div>
+        </div>
+
+        <!-- User Info -->
+        <div class="user-card">
+          <div class="card-label">// active_session</div>
+
+          <div class="user-field">
+            <div class="user-field-key">user</div>
+            <div class="user-field-val green">{{ user.username }}</div>
+          </div>
+
+          <div class="user-field">
+            <div class="user-field-key">email</div>
+            <div class="user-field-val">{{ user.email }}</div>
+          </div>
+
+          <div class="user-field">
+            <div class="user-field-key">status</div>
+            <div class="user-field-val green">● authenticated</div>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-card">
+          <div class="card-label">// session_stats</div>
+
+          <div class="stat-row">
+            <span class="stat-key">total</span>
+            <span class="stat-val">{{ sessions | length }}</span>
+          </div>
+
+          <div class="stat-row">
+            <span class="stat-key">success</span>
+            <span class="stat-val green">
+              {{ sessions | selectattr('ai_status', 'equalto', 'SUCCESS') | list | length }}
+            </span>
+          </div>
+
+          <div class="stat-row">
+            <span class="stat-key">pending</span>
+            <span class="stat-val yellow">
+              {{ sessions | selectattr('ai_status', 'equalto', 'PENDING') | list | length }}
+            </span>
+          </div>
+
+          <div class="stat-row">
+            <span class="stat-key">failed</span>
+            <span class="stat-val red">
+              {{ sessions | selectattr('ai_status', 'equalto', 'FAILED') | list | length }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Logout -->
+        <div class="sidebar-footer">
+          <a href="/logout" class="btn btn-red" style="width: 100%; justify-content: center;">
+            → logout()
+          </a>
+        </div>
+
+      </aside>
+      <!-- ══════════════ END SIDEBAR ══════════════ -->
+
+
+      <!-- ══════════════ MAIN ══════════════ -->
+      <main class="main">
+
+        <div class="page-header">
+          <div class="page-title">
+            <span class="prompt">~</span> AI Debug Assistant
+          </div>
+          <div class="page-sub">
+            Submit a programming issue and get an instant AI-powered analysis.
+          </div>
+        </div>
+
+
+        <!-- ── Submit Form ─────────────────────────── -->
+        <div class="submit-card">
+
+          <div class="submit-card-top">
+            <div class="traffic-lights">
+              <span class="tl tl-red"></span>
+              <span class="tl tl-yellow"></span>
+              <span class="tl tl-green"></span>
+            </div>
+            <span class="submit-card-title">// new_debug_session.py</span>
+          </div>
+
+          <div class="submit-card-body">
+            <form action="/submit" method="POST">
+
+              <div class="form-row-2">
+
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">
+                    language <span class="comment">// select</span>
+                  </label>
+                  <select name="language" required class="form-select">
+                    <option value="" disabled selected>-- pick one --</option>
+                    <option value="Python">Python</option>
+                    <option value="JavaScript">JavaScript</option>
+                    <option value="TypeScript">TypeScript</option>
+                    <option value="Java">Java</option>
+                    <option value="C++">C++</option>
+                    <option value="C#">C#</option>
+                    <option value="Go">Go</option>
+                    <option value="Rust">Rust</option>
+                    <option value="PHP">PHP</option>
+                    <option value="Ruby">Ruby</option>
+                    <option value="Swift">Swift</option>
+                    <option value="Kotlin">Kotlin</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">
+                    issue_description <span class="comment">// str</span>
+                  </label>
+                  <textarea
+                    name="issue_description"
+                    required
+                    class="form-textarea"
+                    rows="3"
+                    placeholder="Describe your bug or issue in detail...&#10;e.g: My for loop runs one extra iteration and I can't figure out why."
+                  ></textarea>
+                </div>
+
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-green">
+                  → ai.analyze()
+                </button>
+              </div>
+
+            </form>
+          </div>
+        </div>
+        <!-- ── End Submit Form ─────────────────────── -->
+
+
+        <!-- ── Sessions List ───────────────────────── -->
+        <div class="sessions-bar">
+          <div class="sessions-title">// debug_session_logs</div>
+          <span class="sessions-badge">{{ sessions | length }} record(s)</span>
+        </div>
+
+        {% for session in sessions | reverse %}
+        <div class="session-card s-{{ session.ai_status | lower }}">
+
+          <!-- Card Header -->
+          <div class="session-head">
+            <div class="session-meta">
+              <span class="session-id">#{{ session.id }}</span>
+              <span class="badge badge-lang">{{ session.language }}</span>
+            </div>
+
+            {% if session.ai_status == 'SUCCESS' %}
+              <span class="badge badge-success">✓ SUCCESS</span>
+            {% elif session.ai_status == 'FAILED' %}
+              <span class="badge badge-failed">✗ FAILED</span>
+            {% else %}
+              <span class="badge badge-pending">⌛ PENDING</span>
+            {% endif %}
+          </div>
+
+          <!-- Card Body -->
+          <div class="session-body">
+
+            <!-- Issue Description -->
+            <div class="issue-block">
+              <div class="issue-label">// issue_description</div>
+              <div class="issue-text">{{ session.issue_description }}</div>
+            </div>
+
+            <!-- AI Results -->
+            {% if session.ai_status == 'SUCCESS' %}
+
+            <!-- Category + Difficulty badges -->
+            <div class="ai-grid">
+              <div class="ai-block">
+                <div class="ai-block-icon">🔍</div>
+                <div class="ai-block-key">ai_category</div>
+                <div class="ai-block-val cat">{{ session.ai_category }}</div>
+              </div>
+
+              <div class="ai-block">
+                <div class="ai-block-icon">📊</div>
+                <div class="ai-block-key">ai_difficulty</div>
+                <div class="ai-block-val
+                  {% if session.ai_difficulty == 'Beginner' %}beg
+                  {% elif session.ai_difficulty == 'Intermediate' %}int
+                  {% else %}adv{% endif %}">
+                  {{ session.ai_difficulty }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Explanation -->
+            <div class="ai-block ai-wide" style="margin-bottom: 10px;">
+              <div class="ai-block-icon">💡</div>
+              <div class="ai-block-key">ai_explanation</div>
+              <div class="ai-block-val rec">{{ session.ai_explanation }}</div>
+            </div>
+
+            <!-- Fix / Corrected Code -->
+            <div class="ai-fix-block">
+              <div class="ai-fix-header">
+                <span class="ai-fix-icon">🛠</span>
+                <span class="ai-fix-label">ai_fix</span>
+              </div>
+              <pre class="ai-fix-code">{{ session.ai_fix }}</pre>
+            </div>
+
+            {% elif session.ai_status == 'FAILED' %}
+            <div class="inline-error">
+              <div class="inline-error-label">// error_trace</div>
+              <div>{{ session.error_message or 'Unknown error occurred during AI analysis.' }}</div>
+            </div>
+
+            {% else %}
+            <div class="inline-pending">
+              ⌛ &nbsp;AI analysis is running in the background.
+              Refresh the page to see results.
+            </div>
+            {% endif %}
+
+          </div>
+        </div>
+        {% else %}
+
+        <div class="empty-state">
+          <div class="empty-icon">📭</div>
+          <div class="empty-text">No debug sessions yet.</div>
+          <div class="empty-sub">Submit your first issue above to get started.</div>
+        </div>
+
+        {% endfor %}
+        <!-- ── End Sessions List ───────────────────── -->
+
+      </main>
+      <!-- ══════════════ END MAIN ══════════════ -->
+
+    </div>
+
+  <script>
+    // Count how many sessions are still PENDING (Jinja2 renders this at page load)
+    const pendingCount = {{ sessions | selectattr('ai_status', 'equalto', 'PENDING') | list | length }};
+
+    // If any are pending, auto-refresh every 3 seconds until they're all done
+    if (pendingCount > 0) {
+      setTimeout(() => location.reload(), 3000);
+    }
+  </script>
+
+  </body>
+</html>

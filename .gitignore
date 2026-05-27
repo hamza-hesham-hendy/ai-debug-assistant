@@ -1,0 +1,25 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Build artifacts
+build/
+dist/
+wheels/
+*.egg-info/
+
+# Virtual environments
+.venv/
+venv/
+
+# Environment variables
+.env
+
+# SQLite database
+database.db
+
+# Optional
+.pytest_cache/
+.mypy_cache/
+.vscode/
+.idea/

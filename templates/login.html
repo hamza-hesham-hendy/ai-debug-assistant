@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login — AI Debug Assistant</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body class="auth-page">
+
+    <div class="auth-brand">
+      <div class="auth-brand-logo">
+        &lt;<span class="dim">/</span>debug<span class="dim">&gt;</span>
+      </div>
+      <div class="auth-brand-tag">AI Debug Assistant Platform &nbsp;·&nbsp; v1.0.0</div>
+    </div>
+
+    <div class="auth-card">
+      <div class="auth-card-title">
+        <span class="prompt">$ </span>system.authenticate()<span class="cursor"></span>
+      </div>
+      <div class="auth-card-sub">Enter your credentials to access the platform.</div>
+
+      {% if error %}
+      <div class="alert-error">⚠ {{ error }}</div>
+      {% endif %}
+
+      <form action="/login" method="POST">
+
+        <div class="form-group">
+          <label class="form-label">
+            username <span class="comment">// str</span>
+          </label>
+          <input
+            type="text"
+            name="username"
+            required
+            class="form-input"
+            placeholder="your_username"
+            autocomplete="username"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            password <span class="comment">// str</span>
+          </label>
+          <input
+            type="password"
+            name="password"
+            required
+            class="form-input"
+            placeholder="••••••••••••"
+            autocomplete="current-password"
+          />
+        </div>
+
+        <button type="submit" class="btn btn-green btn-block">
+          → Execute Login
+        </button>
+      </form>
+
+      <hr class="divider" />
+
+      <p class="auth-footer">
+        No account yet? <a href="/register">Register here</a>
+      </p>
+    </div>
+
+  </body>
+</html>

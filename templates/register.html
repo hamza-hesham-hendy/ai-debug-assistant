@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register — AI Debug Assistant</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body class="auth-page">
+
+    <div class="auth-brand">
+      <div class="auth-brand-logo">
+        &lt;<span class="dim">/</span>debug<span class="dim">&gt;</span>
+      </div>
+      <div class="auth-brand-tag">AI Debug Assistant Platform &nbsp;·&nbsp; v1.0.0</div>
+    </div>
+
+    <div class="auth-card">
+      <div class="auth-card-title">
+        <span class="prompt">$ </span>user.register()<span class="cursor"></span>
+      </div>
+      <div class="auth-card-sub">Create your account to start debugging with AI.</div>
+
+      {% if error %}
+      <div class="alert-error">⚠ {{ error }}</div>
+      {% endif %}
+
+      <form action="/register" method="POST">
+
+        <div class="form-group">
+          <label class="form-label">
+            username <span class="comment">// str, max 20 chars</span>
+          </label>
+          <input
+            type="text"
+            name="username"
+            required
+            maxlength="20"
+            class="form-input"
+            placeholder="your_username"
+            autocomplete="username"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            email <span class="comment">// str</span>
+          </label>
+          <input
+            type="email"
+            name="email"
+            required
+            class="form-input"
+            placeholder="you@example.com"
+            autocomplete="email"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            password <span class="comment">// hashed with argon2</span>
+          </label>
+          <input
+            type="password"
+            name="password"
+            required
+            class="form-input"
+            placeholder="••••••••••••"
+            autocomplete="new-password"
+          />
+        </div>
+
+        <button type="submit" class="btn btn-green btn-block">
+          → Create Account
+        </button>
+      </form>
+
+      <hr class="divider" />
+
+      <p class="auth-footer">
+        Already have an account? <a href="/login">Login here</a>
+      </p>
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,7 @@
+fastapi[standard]
+sqlmodel
+google-genai
+passlib
+argon2-cffi
+python-dotenv
+sqlalchemy
