@@ -794,35 +794,36 @@ body {
     border-top: 1px solid var(--border);
   }
 
-  /* ─── Main content: reduce padding on small screens ───────────── */
+  @media (max-width: 768px) {
 
-  .main {
-    padding: 20px 16px;
-  }
-
-  /* ─── Submit form: stack language + description vertically ─────── */
-
-  .form-row-2 {
-    grid-template-columns: 1fr;   /* single column instead of 190px + 1fr */
-  }
-
-  /* ─── AI results grid: stack all cards vertically ──────────────── */
-
-  .ai-grid {
-    grid-template-columns: 1fr;
-  }
-
-  /* ─── Session card header: wrap if badges overflow ─────────────── */
-
-  .session-head {
+  .session-meta {
     flex-wrap: wrap;
-    gap: 8px;
   }
 
-  /* ─── Auth card: reduce padding on very small screens ──────────── */
+  .badge {
+    max-width: 100%;
+    word-break: break-word;
+  }
 
-  .auth-card {
-    padding: 28px 20px;
+  .issue-text,
+  .ai-block-val,
+  .ai-fix-code {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .submit-card-body,
+  .session-body {
+    padding: 14px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn {
+    width: 100%;
   }
 
 }
