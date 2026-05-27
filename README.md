@@ -39,3 +39,7 @@ A FastAPI web application that uses Google Gemini AI to analyze programming bugs
    ```
 
 5. Open [http://127.0.0.1:8000](http://127.0.0.1:8000)
+
+## Demo
+
+Live Demo: https://web-production-a1ba2.up.railway.app/
