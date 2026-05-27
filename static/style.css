@@ -758,3 +758,71 @@ body {
   margin-bottom: 20px;
   animation: fadeUp 0.3s ease both;
 }
+
+
+/* ══════════════════════════════════════════════════════════════════
+   RESPONSIVE  (mobile: screen width below 768px)
+═══════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+
+  /* ─── Dashboard: stack sidebar above main ──────────────────────── */
+
+  .dashboard {
+    grid-template-columns: 1fr;   /* single column instead of sidebar + main */
+  }
+
+  .sidebar {
+    height: auto;                 /* sidebar no longer full-height */
+    position: static;             /* unstick it so it scrolls normally */
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    flex-direction: row;          /* lay items out horizontally */
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .sidebar-brand  { width: 100%; padding-bottom: 12px; }
+  .user-card      { flex: 1; min-width: 200px; }
+  .stats-card     { flex: 1; min-width: 200px; }
+
+  .sidebar-footer {
+    width: 100%;
+    padding-top: 12px;
+    margin-top: 0;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ─── Main content: reduce padding on small screens ───────────── */
+
+  .main {
+    padding: 20px 16px;
+  }
+
+  /* ─── Submit form: stack language + description vertically ─────── */
+
+  .form-row-2 {
+    grid-template-columns: 1fr;   /* single column instead of 190px + 1fr */
+  }
+
+  /* ─── AI results grid: stack all cards vertically ──────────────── */
+
+  .ai-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* ─── Session card header: wrap if badges overflow ─────────────── */
+
+  .session-head {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* ─── Auth card: reduce padding on very small screens ──────────── */
+
+  .auth-card {
+    padding: 28px 20px;
+  }
+
+}
