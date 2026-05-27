@@ -835,4 +835,15 @@ body {
     overflow-wrap: anywhere;
   }
 
+  .form-textarea {
+  width: 100%;
+  min-height: 140px;
+  font-size: 0.78rem;
+}
+
+.form-input,
+.form-select {
+  font-size: 0.78rem;
+}
+
 }
