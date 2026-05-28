@@ -1,25 +1,66 @@
-# Python cache
+# ─── Python ───────────────────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
+*.pyo
+*.pyd
+*$py.class
 
-# Build artifacts
+# ─── Build / distribution ─────────────────────────────────────────────────────
 build/
 dist/
 wheels/
 *.egg-info/
+*.egg
+MANIFEST
 
-# Virtual environments
+# ─── Virtual environments ─────────────────────────────────────────────────────
 .venv/
 venv/
+env/
+ENV/
 
-# Environment variables
+# ─── Environment / secrets ────────────────────────────────────────────────────
 .env
+.env.*
+!.env.example        # allow a sample env file if you add one
 
-# SQLite database
-database.db
+# ─── Database ─────────────────────────────────────────────────────────────────
+*.db
+*.sqlite
+*.sqlite3
 
-# Optional
+# ─── Testing & coverage ───────────────────────────────────────────────────────
 .pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# ─── Type checking ────────────────────────────────────────────────────────────
 .mypy_cache/
+.pyright/
+.dmypy.json
+dmypy.json
+
+# ─── Linting / formatting ─────────────────────────────────────────────────────
+.ruff_cache/
+
+# ─── IDEs & editors ───────────────────────────────────────────────────────────
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# ─── OS generated ─────────────────────────────────────────────────────────────
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ─── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ─── uv ───────────────────────────────────────────────────────────────────────
+# Keep uv.lock committed (reproducible installs), but ignore uv's cache
+.uv/
