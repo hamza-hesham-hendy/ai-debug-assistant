@@ -5,15 +5,15 @@ Tests for utility functions in utils.py:
   - run_ai_analysis: background task that calls AI and updates DB
 """
 
-import pytest
 from unittest.mock import patch
-from sqlmodel import Session, select
 
-from models import ReviewSession, User
+from sqlmodel import Session
+
+from models import ReviewSession
 from utils import clean_ai_fix, run_ai_analysis
 
-
 # ─── clean_ai_fix ─────────────────────────────────────────────────────────────
+
 
 class TestCleanAiFix:
     """Tests for the clean_ai_fix() sanitizer."""
@@ -103,6 +103,7 @@ class TestCleanAiFix:
 
 # ─── get_current_user ─────────────────────────────────────────────────────────
 
+
 class TestGetCurrentUser:
     """Tests for get_current_user() via simulated requests."""
 
@@ -124,6 +125,7 @@ class TestGetCurrentUser:
 
 
 # ─── run_ai_analysis ──────────────────────────────────────────────────────────
+
 
 class TestRunAiAnalysis:
     """
@@ -151,7 +153,6 @@ class TestRunAiAnalysis:
 
     def test_success_updates_all_fields(self, logged_in_client, engine):
         """Successful AI call populates all AI fields and sets SUCCESS."""
-        import database
         user_id = int(logged_in_client.cookies["session_id"])
         session_id = self._create_pending_session(engine, user_id)
 
@@ -165,8 +166,7 @@ class TestRunAiAnalysis:
         # reads/writes to the same in-memory DB as our test assertions.
         # utils.py does `from database import engine` so we must patch utils.engine,
         # not database.engine.
-        with patch("utils.analyze_issue", return_value=fake_result), \
-             patch("utils.engine", engine):
+        with patch("utils.analyze_issue", return_value=fake_result), patch("utils.engine", engine):
             run_ai_analysis(session_id, "Python", "Off-by-one")
 
         with Session(engine) as db:
@@ -180,13 +180,14 @@ class TestRunAiAnalysis:
 
     def test_ai_exception_marks_failed(self, logged_in_client, engine):
         """When analyze_issue raises, session gets FAILED + error_message."""
-        import database
         user_id = int(logged_in_client.cookies["session_id"])
         session_id = self._create_pending_session(engine, user_id)
 
         # utils.py does `from database import engine` so patch utils.engine directly
-        with patch("utils.analyze_issue", side_effect=ValueError("Bad API response")), \
-             patch("utils.engine", engine):
+        with (
+            patch("utils.analyze_issue", side_effect=ValueError("Bad API response")),
+            patch("utils.engine", engine),
+        ):
             run_ai_analysis(session_id, "Python", "Bad input")
 
         with Session(engine) as db:
@@ -197,27 +198,39 @@ class TestRunAiAnalysis:
 
     def test_nonexistent_session_id_does_not_crash(self, engine):
         """Passing a non-existent session_id doesn't raise (graceful no-op)."""
-        import database
-        with patch("utils.analyze_issue", return_value={
-            "ai_category": "X", "ai_difficulty": "Beginner",
-            "ai_explanation": "Y", "ai_fix": "Z",
-        }), patch("utils.engine", engine):
+        with (
+            patch(
+                "utils.analyze_issue",
+                return_value={
+                    "ai_category": "X",
+                    "ai_difficulty": "Beginner",
+                    "ai_explanation": "Y",
+                    "ai_fix": "Z",
+                },
+            ),
+            patch("utils.engine", engine),
+        ):
             # Should not raise any exception
             run_ai_analysis(999999, "Python", "Doesn't matter")
 
     def test_ai_fix_is_cleaned_before_save(self, logged_in_client, engine):
         """clean_ai_fix is applied to ai_fix before saving."""
-        import database
         user_id = int(logged_in_client.cookies["session_id"])
         session_id = self._create_pending_session(engine, user_id)
 
         raw_fix = "```python\ndef foo():\n    pass\n```"
-        with patch("utils.analyze_issue", return_value={
-            "ai_category": "Syntax Error",
-            "ai_difficulty": "Beginner",
-            "ai_explanation": "Missing colon",
-            "ai_fix": raw_fix,
-        }), patch("utils.engine", engine):
+        with (
+            patch(
+                "utils.analyze_issue",
+                return_value={
+                    "ai_category": "Syntax Error",
+                    "ai_difficulty": "Beginner",
+                    "ai_explanation": "Missing colon",
+                    "ai_fix": raw_fix,
+                },
+            ),
+            patch("utils.engine", engine),
+        ):
             run_ai_analysis(session_id, "Python", "Missing colon")
 
         with Session(engine) as db:

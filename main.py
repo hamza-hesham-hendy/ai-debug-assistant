@@ -1,5 +1,4 @@
 from contextlib import asynccontextmanager
-from typing import Optional
 
 from fastapi import (
     BackgroundTasks,
@@ -24,7 +23,7 @@ from utils import get_current_user, password_context, run_ai_analysis
 # Modern lifespan replaces the deprecated @app.on_event("startup")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    create_db_and_tables()   # runs on startup
+    create_db_and_tables()  # runs on startup
     yield
     # shutdown cleanup can go here if needed
 
@@ -37,11 +36,12 @@ templates = Jinja2Templates(directory="templates")
 
 # ─── Dashboard ────────────────────────────────────────────────────────────────
 
+
 @app.get("/", response_class=HTMLResponse)
 def index(
     request: Request,
     db: Session = Depends(get_session),
-    user: Optional[User] = Depends(get_current_user),
+    user: User | None = Depends(get_current_user),
 ):
     # Guard: unauthenticated users get redirected to login
     if not user:
@@ -60,13 +60,14 @@ def index(
 
 # ─── Submit Issue ─────────────────────────────────────────────────────────────
 
+
 @app.post("/submit")
 def handle_submit(
     background_tasks: BackgroundTasks,
     language: str = Form(),
     issue_description: str = Form(),
     db: Session = Depends(get_session),
-    user: Optional[User] = Depends(get_current_user),
+    user: User | None = Depends(get_current_user),
 ):
     if not user:
         return RedirectResponse(url="/login", status_code=status.HTTP_303_SEE_OTHER)
@@ -94,6 +95,7 @@ def handle_submit(
 
 
 # ─── Register ─────────────────────────────────────────────────────────────────
+
 
 @app.get("/register", response_class=HTMLResponse)
 def register(request: Request):
@@ -124,6 +126,7 @@ def handle_register(
 
 # ─── Login ────────────────────────────────────────────────────────────────────
 
+
 @app.get("/login", response_class=HTMLResponse)
 def login(request: Request):
     return templates.TemplateResponse(request=request, name="login.html")
@@ -152,6 +155,7 @@ def handle_login(
 
 
 # ─── Logout ───────────────────────────────────────────────────────────────────
+
 
 @app.get("/logout")
 def handle_logout():

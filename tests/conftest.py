@@ -12,14 +12,14 @@ Key design decisions:
 """
 
 import itertools
+import os
+import sys
+from unittest.mock import patch
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlmodel import Session, SQLModel, create_engine
 from sqlmodel.pool import StaticPool
-from unittest.mock import patch
-
-import sys
-import os
 
 # Ensure project root is on the path so imports work
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -28,7 +28,6 @@ from database import get_session
 from main import app
 from models import User
 from utils import password_context
-
 
 # ─── Fake AI response ─────────────────────────────────────────────────────────
 
@@ -58,6 +57,7 @@ def _next_user():
 
 # ─── In-memory DB engine ──────────────────────────────────────────────────────
 
+
 @pytest.fixture(name="engine", scope="session")
 def engine_fixture():
     """Create a fresh in-memory SQLite engine for the whole test session."""
@@ -80,12 +80,14 @@ def db_fixture(engine):
 
 # ─── FastAPI TestClient ───────────────────────────────────────────────────────
 
+
 @pytest.fixture(name="client")
 def client_fixture(engine):
     """
     TestClient whose DB dependency is overridden to use the in-memory engine.
     Also patches analyze_issue so no real API calls fire.
     """
+
     def override_get_session():
         with Session(engine) as session:
             yield session
@@ -100,6 +102,7 @@ def client_fixture(engine):
 
 
 # ─── Pre-created user fixtures ────────────────────────────────────────────────
+
 
 @pytest.fixture(name="registered_user")
 def registered_user_fixture(engine):
@@ -142,6 +145,7 @@ def logged_in_client_fixture(client, registered_user):
 
 
 # ─── Mock AI fixture (explicit, for tests that need fine-grained control) ─────
+
 
 @pytest.fixture(name="mock_ai")
 def mock_ai_fixture():

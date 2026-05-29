@@ -52,10 +52,10 @@ def analyze_issue(language: str, issue_description: str) -> dict:
             response_schema=types.Schema(
                 type=types.Type.OBJECT,
                 properties={
-                    "ai_category":    types.Schema(type=types.Type.STRING),
-                    "ai_difficulty":  types.Schema(type=types.Type.STRING),
+                    "ai_category": types.Schema(type=types.Type.STRING),
+                    "ai_difficulty": types.Schema(type=types.Type.STRING),
                     "ai_explanation": types.Schema(type=types.Type.STRING),
-                    "ai_fix":         types.Schema(type=types.Type.STRING),
+                    "ai_fix": types.Schema(type=types.Type.STRING),
                 },
                 required=["ai_category", "ai_difficulty", "ai_explanation", "ai_fix"],
             ),

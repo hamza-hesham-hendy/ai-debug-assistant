@@ -2,13 +2,12 @@
 Tests for database.py: engine creation, table setup, and session management.
 """
 
-import pytest
-from sqlmodel import Session, SQLModel, create_engine, select, text
+from sqlmodel import Session, create_engine, select, text
 from sqlmodel.pool import StaticPool
 
 import database
 from database import create_db_and_tables, get_session
-from models import User, ReviewSession
+from models import ReviewSession, User
 
 
 class TestCreateDbAndTables:

@@ -5,9 +5,9 @@ and error handling edge cases.
 """
 
 import time
-import pytest
-from fastapi import status
 from unittest.mock import patch
+
+from fastapi import status
 from sqlmodel import Session, select
 
 from models import ReviewSession
@@ -77,12 +77,15 @@ class TestSubmit:
 
     def test_submit_creates_pending_session(self, logged_in_client, engine):
         """Valid submit creates a ReviewSession with PENDING status immediately."""
-        with patch("utils.analyze_issue", return_value={
-            "ai_category": "Syntax Error",
-            "ai_difficulty": "Beginner",
-            "ai_explanation": "Explanation",
-            "ai_fix": "Fix here",
-        }):
+        with patch(
+            "utils.analyze_issue",
+            return_value={
+                "ai_category": "Syntax Error",
+                "ai_difficulty": "Beginner",
+                "ai_explanation": "Explanation",
+                "ai_fix": "Fix here",
+            },
+        ):
             response = logged_in_client.post(
                 "/submit",
                 data={
@@ -129,12 +132,15 @@ class TestSubmit:
         """Submit works for various programming languages."""
         languages = ["Python", "JavaScript", "Go", "Rust", "Java"]
         for lang in languages:
-            with patch("utils.analyze_issue", return_value={
-                "ai_category": "Logic Error",
-                "ai_difficulty": "Intermediate",
-                "ai_explanation": "Some explanation",
-                "ai_fix": "Some fix",
-            }):
+            with patch(
+                "utils.analyze_issue",
+                return_value={
+                    "ai_category": "Logic Error",
+                    "ai_difficulty": "Intermediate",
+                    "ai_explanation": "Some explanation",
+                    "ai_fix": "Some fix",
+                },
+            ):
                 response = logged_in_client.post(
                     "/submit",
                     data={"language": lang, "issue_description": f"Bug in {lang}"},
@@ -147,8 +153,6 @@ class TestSubmit:
         After background task runs, ReviewSession is updated to SUCCESS
         with AI fields populated.
         """
-        import database
-        import time
         fake_result = {
             "ai_category": "Type Error",
             "ai_difficulty": "Intermediate",
@@ -158,8 +162,7 @@ class TestSubmit:
         # Patch both analyze_issue AND utils.engine so the background task
         # writes back to the same in-memory DB that we query below.
         # utils.py does `from database import engine` so patch utils.engine.
-        with patch("utils.analyze_issue", return_value=fake_result), \
-             patch("utils.engine", engine):
+        with patch("utils.analyze_issue", return_value=fake_result), patch("utils.engine", engine):
             logged_in_client.post(
                 "/submit",
                 data={"language": "TypeScript", "issue_description": "Type mismatch unique"},
@@ -180,10 +183,10 @@ class TestSubmit:
 
     def test_submit_ai_failure_marks_failed(self, logged_in_client, engine):
         """When analyze_issue raises, the session gets FAILED status."""
-        import database
-        import time
-        with patch("utils.analyze_issue", side_effect=RuntimeError("API unavailable")), \
-             patch("utils.engine", engine):
+        with (
+            patch("utils.analyze_issue", side_effect=RuntimeError("API unavailable")),
+            patch("utils.engine", engine),
+        ):
             logged_in_client.post(
                 "/submit",
                 data={"language": "Kotlin", "issue_description": "will fail uniquely"},
@@ -201,12 +204,15 @@ class TestSubmit:
 
     def test_submit_redirects_back_to_dashboard(self, logged_in_client):
         """Successful submit always redirects to /."""
-        with patch("utils.analyze_issue", return_value={
-            "ai_category": "Import Error",
-            "ai_difficulty": "Beginner",
-            "ai_explanation": "Module not found",
-            "ai_fix": "pip install it",
-        }):
+        with patch(
+            "utils.analyze_issue",
+            return_value={
+                "ai_category": "Import Error",
+                "ai_difficulty": "Beginner",
+                "ai_explanation": "Module not found",
+                "ai_fix": "pip install it",
+            },
+        ):
             response = logged_in_client.post(
                 "/submit",
                 data={"language": "Python", "issue_description": "import error"},

@@ -22,7 +22,7 @@ def clean_ai_fix(text: str) -> str:
     if not text:
         return text
 
-    # Remove markdown code fences like ```python or ``` 
+    # Remove markdown code fences like ```python or ```
     text = re.sub(r"```[\w]*\n?", "", text)
 
     # Collapse 3 or more consecutive newlines into exactly 2 (one blank line)
@@ -51,11 +51,11 @@ def run_ai_analysis(session_id: int, language: str, issue_description: str):
         with Session(engine) as db:
             review = db.get(ReviewSession, session_id)
             if review:
-                review.ai_category    = ai_result["ai_category"]
-                review.ai_difficulty  = ai_result["ai_difficulty"]
+                review.ai_category = ai_result["ai_category"]
+                review.ai_difficulty = ai_result["ai_difficulty"]
                 review.ai_explanation = ai_result["ai_explanation"]
-                review.ai_fix         = clean_ai_fix(ai_result["ai_fix"])
-                review.ai_status      = "SUCCESS"
+                review.ai_fix = clean_ai_fix(ai_result["ai_fix"])
+                review.ai_status = "SUCCESS"
                 db.add(review)
                 db.commit()
 
@@ -63,7 +63,7 @@ def run_ai_analysis(session_id: int, language: str, issue_description: str):
         with Session(engine) as db:
             review = db.get(ReviewSession, session_id)
             if review:
-                review.ai_status     = "FAILED"
+                review.ai_status = "FAILED"
                 review.error_message = str(e)
                 db.add(review)
                 db.commit()

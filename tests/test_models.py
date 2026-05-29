@@ -199,17 +199,17 @@ class TestReviewSessionModel:
         user_id = self._make_user(engine, "multi_session_user")
         with Session(engine) as db:
             for i in range(3):
-                db.add(ReviewSession(
-                    user_id=user_id,
-                    language="Python",
-                    issue_description=f"Issue {i}",
-                ))
+                db.add(
+                    ReviewSession(
+                        user_id=user_id,
+                        language="Python",
+                        issue_description=f"Issue {i}",
+                    )
+                )
             db.commit()
 
         with Session(engine) as db:
-            sessions = db.exec(
-                select(ReviewSession).where(ReviewSession.user_id == user_id)
-            ).all()
+            sessions = db.exec(select(ReviewSession).where(ReviewSession.user_id == user_id)).all()
         assert len(sessions) == 3
 
     def test_session_id_is_auto_incremented(self, engine):

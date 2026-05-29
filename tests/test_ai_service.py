@@ -8,11 +8,11 @@ The Gemini client is always mocked so:
 """
 
 import json
+from unittest.mock import MagicMock, patch
+
 import pytest
-from unittest.mock import patch, MagicMock
 
 from ai_service import analyze_issue
-
 
 SAMPLE_RESULT = {
     "ai_category": "Syntax Error",

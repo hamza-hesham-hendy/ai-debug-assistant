@@ -3,9 +3,7 @@ Tests for authentication routes: /register, /login, /logout.
 Covers happy paths and edge cases (duplicate users, bad credentials, missing fields).
 """
 
-import pytest
 from fastapi import status
-
 
 # Use the non-deprecated constant for 422
 HTTP_422 = 422
@@ -46,8 +44,8 @@ class TestRegister:
         response = client.post(
             "/register",
             data={
-                "username": "dupuser_X",       # same username
-                "email": "dup2_X@example.com", # different email
+                "username": "dupuser_X",  # same username
+                "email": "dup2_X@example.com",  # different email
                 "password": "pass",
             },
             follow_redirects=False,
@@ -67,7 +65,7 @@ class TestRegister:
         response = client.post(
             "/register",
             data={
-                "username": "emailuser2_X",       # different username
+                "username": "emailuser2_X",  # different username
                 "email": "shared_X@example.com",  # same email
                 "password": "pass",
             },
@@ -179,6 +177,7 @@ class TestLogin:
     def test_login_sets_correct_cookie(self, registered_user, client, engine):
         """The session_id cookie value matches the actual user's DB id."""
         from sqlmodel import Session, select
+
         from models import User
 
         client.post(
