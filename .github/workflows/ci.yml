@@ -26,18 +26,7 @@ jobs:
           version: "latest"
 
       - name: Install dependencies
-        run: |
-          uv pip install --system \
-            fastapi[standard] \
-            sqlmodel \
-            google-genai \
-            passlib \
-            argon2-cffi \
-            python-dotenv \
-            sqlalchemy \
-            pytest \
-            pytest-cov \
-            httpx
+        run: uv pip install --system -r requirements-dev.txt
 
       - name: Run tests with coverage
         env:
