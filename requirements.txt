@@ -5,3 +5,11 @@ passlib
 argon2-cffi
 python-dotenv
 sqlalchemy
+
+# Testing
+pytest
+pytest-cov
+httpx
+
+# Linting & Formatting
+ruff

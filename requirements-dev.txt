@@ -1,9 +1,0 @@
--r requirements.txt
-
-# Testing
-pytest
-pytest-cov
-httpx
-
-# Linting & Formatting
-ruff
